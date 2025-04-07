@@ -1,4 +1,4 @@
-name: Deploy Django App
+name: Deploy Django App with SQLite
 
 on:
   push:
@@ -9,8 +9,37 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY || 'django-insecure-default-key-for-workflow-replace-in-production' }}
+      DEBUG: 'False'
+      DJANGO_SETTINGS_MODULE: 'clothing_store.settings_prod'
+      
     steps:
     - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run database migrations
+      run: |
+        python manage.py migrate
+        
+    - name: Create initial data
+      run: |
+        python create_country_codes.py
+        python create_test_users.py
+        python create_sample_data.py
+        
+    - name: Collect static files
+      run: |
+        python manage.py collectstatic --noinput
     
     - name: Deploy to Production
       uses: akhileshns/heroku-deploy@v3.12.14
@@ -18,3 +47,5 @@ jobs:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
         heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        procfile: "web: gunicorn clothing_store.wsgi --log-file -"
+        env_file: ".env"
