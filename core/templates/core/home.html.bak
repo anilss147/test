@@ -1,0 +1,319 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My Cutipie - Fun, Colorful Kids Clothing Collection{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+<!-- Hero Section - Kid-Friendly -->
+<section class="relative overflow-hidden bg-gradient-to-r from-purple-100 via-pink-50 to-yellow-100 py-12 md:py-20">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Left side content -->
+            <div class="text-left">
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4 relative">
+                    <span class="relative inline-block">
+                        Colorful Styles
+                        <div class="absolute bottom-0 left-0 w-full h-3 bg-yellow-300 transform -rotate-1 -z-10"></div>
+                    </span>
+                    <br>
+                    <span class="text-pink-600">for Playful Kids!</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-gray-700 mb-8">
+                    Discover our new collection of comfortable, 
+                    <span class="text-pink-600 font-semibold">high-quality</span> 
+                    kids clothing at 
+                    <span class="text-pink-600 font-semibold">factory outlet prices!</span>
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <a href="{% url 'products:category_list' 'kids' %}" class="btn-primary flex items-center">
+                        Shop Kids Collection
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="{% url 'products:list' %}" class="btn-secondary flex items-center">
+                        Browse All
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Right side - decorative elements -->
+            <div class="relative h-80 md:h-96">
+                <!-- Main image -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-64 h-64 md:w-80 md:h-80 bg-white p-4 rounded-xl shadow-lg transform rotate-3 transition-transform hover:rotate-6 duration-300">
+                        <img src="/static/img/kids-collection.jpg" alt="Kids Collection" class="w-full h-full object-cover rounded-lg" 
+                             onerror="this.onerror=null; this.src='/media/products/placeholder.svg';">
+                    </div>
+                </div>
+                
+                <!-- Decorative elements -->
+                <div class="absolute -top-6 -right-6 w-24 h-24 bg-yellow-300 rounded-full opacity-70"></div>
+                <div class="absolute bottom-10 -left-8 w-16 h-16 bg-pink-400 rounded-full opacity-60"></div>
+                <div class="absolute top-20 right-10 w-12 h-12 bg-purple-400 rounded-full opacity-60"></div>
+                
+                <!-- Floating stars -->
+                <svg class="absolute top-8 left-10 w-10 h-10 text-yellow-500 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                </svg>
+                <svg class="absolute bottom-16 right-12 w-8 h-8 text-pink-500 animate-pulse" style="animation-delay: 0.5s;" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Decorative background patterns -->
+    <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 rounded-full bg-yellow-200 opacity-20"></div>
+    <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-60 h-60 rounded-full bg-pink-200 opacity-20"></div>
+</section>
+    <!-- Featured Categories -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-pink-600 inline-block relative">
+                    <span class="relative z-10">Shop Kids Collection</span>
+                    <span class="absolute bottom-1 left-0 w-full h-3 bg-yellow-200 -z-10 transform -rotate-1"></span>
+                </h2>
+                <p class="text-gray-600 mt-3 max-w-xl mx-auto">Colorful, comfortable and fun clothing for your little ones!</p>
+            </div>
+            
+            <!-- Kids Categories (Large) -->
+            <div class="mb-10">
+                <a href="{% url 'products:category_list' 'kids' %}" class="group block mb-6">
+                    <div class="relative h-96 rounded-2xl overflow-hidden bg-gradient-to-r from-blue-100 to-green-100 shadow-md hover:shadow-lg transition-all duration-300">
+                        <div class="absolute inset-0 w-full h-full overflow-hidden">
+                            <div class="absolute top-5 right-5 bg-pink-500 text-white font-bold py-1 px-3 rounded-full shadow-md z-10">
+                                Outlet Prices!
+                            </div>
+                            <!-- Kid-themed decorations -->
+                            <div class="absolute top-0 left-0 w-full h-full">
+                                <div class="absolute top-10 left-10 w-20 h-20 bg-yellow-300 rounded-full opacity-20"></div>
+                                <div class="absolute bottom-10 right-10 w-16 h-16 bg-pink-300 rounded-full opacity-20"></div>
+                                <div class="absolute top-40 right-40 w-10 h-10 bg-blue-300 rounded-full opacity-20"></div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center px-6 py-8 bg-white bg-opacity-80 backdrop-blur-sm rounded-xl shadow-lg max-w-md transform group-hover:scale-105 transition-all duration-300">
+                                <h3 class="text-3xl font-bold text-pink-600 mb-3">Kids Collection</h3>
+                                <p class="text-gray-700 mb-4">Explore our vibrant, comfortable and stylish kids wear collection at factory outlet prices!</p>
+                                <span class="inline-block bg-pink-600 text-white px-4 py-2 rounded-full font-medium group-hover:bg-pink-700 transition-colors duration-300">
+                                    Shop Now
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                        <div class="w-80 h-80 bg-white rounded-full shadow-2xl flex items-center justify-center overflow-hidden p-4 border-8 border-white border-opacity-20">
+                            <!-- Insert kid image if available, otherwise animated placeholder -->
+                            <div class="text-center">
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-full h-full text-pink-600">
+                                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-4-8c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Categories -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Shop Kids Collection</h2>
+            
+            <!-- Kids Categories (Large) -->
+            <div class="mb-10">
+                <a href="{% url 'products:category_list' 'kids' %}" class="group block mb-6">
+                    <div class="relative h-96 rounded-lg overflow-hidden bg-gray-200">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                            <div class="p-8 w-full text-white">
+                                <h3 class="text-3xl font-bold mb-2">Kids Collection</h3>
+                                <p class="mb-4 text-xl">Playful, comfortable and durable clothing for active kids</p>
+                                <span class="inline-block py-3 px-6 border-2 border-white rounded-lg group-hover:bg-white group-hover:text-black transition duration-200 font-medium">
+                                    Explore Kids Collection
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Adult Categories (Smaller) -->
+            <h3 class="text-2xl font-bold text-center mb-6">Also Available</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="{% url 'products:category_list' 'women' %}" class="group">
+                    <div class="relative h-72 rounded-lg overflow-hidden bg-gray-200">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                            <div class="p-6 w-full text-white">
+                                <h3 class="text-2xl font-bold mb-2">Women</h3>
+                                <p class="mb-4">Elegant styles for every occasion</p>
+                                <span class="inline-block py-2 px-4 border border-white rounded group-hover:bg-white group-hover:text-black transition duration-200">
+                                    Shop Now
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'products:category_list' 'men' %}" class="group">
+                    <div class="relative h-72 rounded-lg overflow-hidden bg-gray-200">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                            <div class="p-6 w-full text-white">
+                                <h3 class="text-2xl font-bold mb-2">Men</h3>
+                                <p class="mb-4">Contemporary fashion for modern men</p>
+                                <span class="inline-block py-2 px-4 border border-white rounded group-hover:bg-white group-hover:text-black transition duration-200">
+                                    Shop Now
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Products -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Featured Products</h2>
+            
+            {% if featured_products %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {% for product in featured_products %}
+                        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <a href="{% url 'products:detail' product.id %}">
+                                <div class="h-64 bg-gray-200 relative">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="flex items-center justify-center h-full text-gray-500">
+                                            <i data-feather="image" class="w-12 h-12"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if product.discount_price %}
+                                        <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                            SALE
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <div class="p-4">
+                                <h3 class="font-medium text-gray-900 mb-1">
+                                    <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
+                                </h3>
+                                <p class="text-gray-500 text-sm mb-2">{{ product.category.name }}</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        {% if product.discount_price %}
+                                            <span class="text-red-600 font-bold">₹{{ product.discount_price }}</span>
+                                            <span class="text-gray-400 line-through ml-2">₹{{ product.price }}</span>
+                                        {% else %}
+                                            <span class="font-bold">₹{{ product.price }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <div class="text-amber-400">
+                                            <i data-feather="star" class="w-4 h-4 fill-current"></i>
+                                        </div>
+                                        <span class="text-sm text-gray-600">{{ product.rating|default:"0.0" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <p class="text-gray-500">No featured products available at the moment.</p>
+                </div>
+            {% endif %}
+            
+            <div class="mt-8 text-center">
+                <a href="{% url 'products:list' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                    View All Products
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- New Arrivals -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">New Arrivals</h2>
+            
+            {% if new_arrivals %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {% for product in new_arrivals %}
+                        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <a href="{% url 'products:detail' product.id %}">
+                                <div class="h-64 bg-gray-200 relative">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="flex items-center justify-center h-full text-gray-500">
+                                            <i data-feather="image" class="w-12 h-12"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if product.is_new %}
+                                        <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                            NEW
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <div class="p-4">
+                                <h3 class="font-medium text-gray-900 mb-1">
+                                    <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
+                                </h3>
+                                <p class="text-gray-500 text-sm mb-2">{{ product.category.name }}</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        {% if product.discount_price %}
+                                            <span class="text-red-600 font-bold">₹{{ product.discount_price }}</span>
+                                            <span class="text-gray-400 line-through ml-2">₹{{ product.price }}</span>
+                                        {% else %}
+                                            <span class="font-bold">₹{{ product.price }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <div class="text-amber-400">
+                                            <i data-feather="star" class="w-4 h-4 fill-current"></i>
+                                        </div>
+                                        <span class="text-sm text-gray-600">{{ product.rating|default:"0.0" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <p class="text-gray-500">No new arrivals available at the moment.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    
+    <!-- Promotional Banner -->
+    <section class="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Kids Summer Collection 2025</h2>
+                <p class="text-xl text-gray-100 mb-8">Colorful, comfortable clothing for kids of all ages. Up to 40% off!</p>
+                <a href="{% url 'products:category_list' 'kids' %}" class="inline-block bg-white text-purple-700 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition duration-200">
+                    Shop Kids Collection
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
