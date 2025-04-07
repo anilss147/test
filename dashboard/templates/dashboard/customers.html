@@ -1,0 +1,196 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Customers Management - StyleShop{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Customers Management</h1>
+            <a href="{% url 'core:home' %}" class="text-blue-600 hover:underline flex items-center">
+                <i data-feather="external-link" class="w-4 h-4 mr-1"></i> View Store
+            </a>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <div class="mb-8">
+            <nav class="flex space-x-4 border-b">
+                <a href="{% url 'dashboard:index' %}" class="py-2 px-4 text-gray-600 hover:text-blue-600 font-medium">
+                    Overview
+                </a>
+                <a href="{% url 'dashboard:products' %}" class="py-2 px-4 text-gray-600 hover:text-blue-600 font-medium">
+                    Products
+                </a>
+                <a href="{% url 'dashboard:orders' %}" class="py-2 px-4 text-gray-600 hover:text-blue-600 font-medium">
+                    Orders
+                </a>
+                <a href="{% url 'dashboard:customers' %}" class="py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium">
+                    Customers
+                </a>
+                <a href="{% url 'dashboard:analytics' %}" class="py-2 px-4 text-gray-600 hover:text-blue-600 font-medium">
+                    Analytics
+                </a>
+            </nav>
+        </div>
+        
+        <!-- Customer Tools -->
+        <div class="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 mb-8">
+            <div class="flex space-x-4">
+                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                    <i data-feather="mail" class="w-4 h-4 mr-2"></i>
+                    Send Newsletter
+                </a>
+                <a href="#" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg inline-flex items-center">
+                    <i data-feather="download" class="w-4 h-4 mr-2"></i>
+                    Export
+                </a>
+            </div>
+            
+            <div class="flex">
+                <div class="relative">
+                    <input type="text" placeholder="Search customers..." 
+                           class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button class="absolute right-3 top-2.5">
+                        <i data-feather="search" class="w-5 h-5 text-gray-500"></i>
+                    </button>
+                </div>
+                
+                <div class="ml-4">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Sort by: Recent</option>
+                        <option value="a-z">Sort by: A-Z</option>
+                        <option value="high">Sort by: Highest Spender</option>
+                        <option value="orders">Sort by: Most Orders</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Customers Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Customer
+                            </th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Email
+                            </th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Joined
+                            </th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Orders
+                            </th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Total Spent
+                            </th>
+                            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th class="py-3 px-6 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for user in users %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">
+                                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ user.first_name }} {{ user.last_name }}
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                @{{ user.username }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ user.email }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ user.date_joined|date:"M d, Y" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ user.order_count }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    ₹{{ user.total_spent|floatformat:2 }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if user.is_active %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Active
+                                        </span>
+                                    {% else %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            Inactive
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">
+                                        View
+                                    </a>
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                        Email
+                                    </a>
+                                    <a href="#" class="text-red-600 hover:text-red-900">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    No customers found
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    Showing <span class="font-medium">1</span> to 
+                    <span class="font-medium">{{ users|length }}</span> of 
+                    <span class="font-medium">{{ users.count }}</span> customers
+                </div>
+                
+                <div class="flex-1 flex justify-end">
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Previous</span>
+                            <i data-feather="chevron-left" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-blue-600 hover:bg-gray-50">
+                            1
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            2
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            3
+                        </a>
+                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                            ...
+                        </span>
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Next</span>
+                            <i data-feather="chevron-right" class="w-5 h-5"></i>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
