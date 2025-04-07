@@ -1,0 +1,468 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ product.name }} - My Cutipie{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <!-- Breadcrumbs -->
+        <div class="text-sm text-gray-600 mb-6">
+            <a href="{% url 'core:home' %}" class="hover:text-blue-600">Home</a> &gt;
+            <a href="{% url 'products:list' %}" class="hover:text-blue-600">Products</a> &gt;
+            <a href="{% url 'products:category_list' product.category.slug %}" class="hover:text-blue-600">{{ product.category.name }}</a> &gt;
+            <span class="text-gray-900">{{ product.name }}</span>
+        </div>
+        
+        <div class="flex flex-wrap -mx-4">
+            <!-- Product Images -->
+            <div class="w-full lg:w-1/2 px-4 mb-8 lg:mb-0">
+                <div class="mb-4">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto rounded-lg shadow-sm object-cover" style="max-height: 600px;">
+                    {% else %}
+                        <div class="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+                            <i data-feather="image" class="w-16 h-16 text-gray-400"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if product.images.all %}
+                    <div class="grid grid-cols-4 gap-2">
+                        {% for image in product.images.all %}
+                            <div class="cursor-pointer">
+                                <img src="{{ image.image.url }}" alt="{{ product.name }}" class="w-full h-24 object-cover rounded-lg">
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Product Information -->
+            <div class="w-full lg:w-1/2 px-4">
+                <!-- Product Title and Rating -->
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
+                    {% include "products/includes/product_labels.html" with product=product %}
+                    <div class="flex items-center mb-3">
+                        <div class="flex text-amber-400">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= product.rating %}
+                                    <i data-feather="star" class="w-5 h-5 fill-current"></i>
+                                {% elif forloop.counter <= product.rating|add:"0.5" %}
+                                    <i data-feather="star" class="w-5 h-5 fill-current"></i>
+                                {% else %}
+                                    <i data-feather="star" class="w-5 h-5"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="ml-2 text-gray-600">{{ product.reviews.count }} reviews</span>
+                    </div>
+                </div>
+                
+                <!-- Price -->
+                <div class="mb-6">
+                    {% if product.discount_price %}
+                        <div class="flex items-center mb-1">
+                            <span class="text-3xl font-bold text-red-600">₹{{ product.discount_price }}</span>
+                            <span class="ml-3 text-xl text-gray-500 line-through">₹{{ product.price }}</span>
+                            {% with discount=product.price|floatformat:2|float|sub:product.discount_price|floatformat:2|float %}
+                            {% with percentage=discount|div:product.price|floatformat:2|float|mul:100|floatformat:0|int %}
+                                <span class="ml-3 bg-red-100 text-red-800 text-sm font-semibold px-2 py-1 rounded">
+                                    {{ percentage }}% OFF
+                                </span>
+                            {% endwith %}
+                            {% endwith %}
+                        </div>
+                    {% else %}
+                        <div class="text-3xl font-bold mb-1">₹{{ product.price }}</div>
+                    {% endif %}
+                    <div class="text-green-600 text-sm">
+                        {% if product.stock > 10 %}
+                            <i data-feather="check" class="w-4 h-4 inline"></i> In Stock
+                        {% elif product.stock > 0 %}
+                            <i data-feather="alert-circle" class="w-4 h-4 inline"></i> Only {{ product.stock }} left in stock
+                        {% else %}
+                            <i data-feather="x" class="w-4 h-4 inline"></i> Out of Stock
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold mb-2">Description</h2>
+                    <div class="text-gray-700">
+                        {{ product.description|linebreaks }}
+                    </div>
+                </div>
+                
+                <!-- Variants and Add to Cart -->
+                <div class="mb-8">
+                    <form action="{% url 'cart:add' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        
+                        {% if product.variants.all %}
+                            <!-- Size Selection -->
+                            <div class="mb-4">
+                                <label for="size" class="block font-semibold mb-2">Size</label>
+                                <div class="grid grid-cols-6 gap-2">
+                                    {% for variant in product.variants.all|dictsort:"size"|unique:"size" %}
+                                        <label class="border rounded-md py-2 px-3 flex items-center justify-center cursor-pointer hover:border-blue-500 text-sm {% if variant.stock == 0 %}bg-gray-100 text-gray-400 cursor-not-allowed{% endif %}">
+                                            <input type="radio" name="size" value="{{ variant.size }}" class="sr-only" {% if variant.stock == 0 %}disabled{% endif %} required>
+                                            <span>{{ variant.size }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <!-- Color Selection -->
+                            <div class="mb-4">
+                                <label for="color" class="block font-semibold mb-2">Color</label>
+                                <div class="grid grid-cols-6 gap-2">
+                                    {% for variant in product.variants.all|dictsort:"color"|unique:"color" %}
+                                        <label class="border rounded-md py-2 px-3 flex items-center justify-center cursor-pointer hover:border-blue-500 text-sm {% if variant.stock == 0 %}bg-gray-100 text-gray-400 cursor-not-allowed{% endif %}">
+                                            <input type="radio" name="color" value="{{ variant.color }}" class="sr-only" {% if variant.stock == 0 %}disabled{% endif %} required>
+                                            <span>{{ variant.color }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Quantity -->
+                        <div class="mb-6">
+                            <label for="quantity" class="block font-semibold mb-2">Quantity</label>
+                            <div class="custom-number-input w-32">
+                                <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
+                                    <button type="button" class="bg-gray-200 text-gray-600 hover:text-gray-700 hover:bg-gray-300 h-full w-20 rounded-l cursor-pointer outline-none flex items-center justify-center" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                        <span class="m-auto text-2xl font-thin">−</span>
+                                    </button>
+                                    <input type="number" name="quantity" class="outline-none focus:outline-none text-center w-full bg-white font-semibold text-md hover:text-black focus:text-black flex items-center text-gray-700" name="custom-input-number" value="1" min="1" max="{{ product.stock }}">
+                                    <button type="button" class="bg-gray-200 text-gray-600 hover:text-gray-700 hover:bg-gray-300 h-full w-20 rounded-r cursor-pointer flex items-center justify-center" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                        <span class="m-auto text-2xl font-thin">+</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex items-center space-x-4">
+                            <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}" {% if product.stock == 0 %}disabled{% endif %}>
+                                <i data-feather="shopping-cart" class="w-5 h-5 inline mr-2"></i> Add to Cart
+                            </button>
+                            
+                            {% if user.is_authenticated %}
+                                {% if is_in_wishlist %}
+                                    <a href="{% url 'wishlist:remove' product.id %}" class="bg-white border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                                        <i data-feather="heart" class="w-5 h-5 fill-current"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'wishlist:add' product.id %}" class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold py-3 px-4 rounded-lg transition duration-200">
+                                        <i data-feather="heart" class="w-5 h-5"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Additional Info -->
+                <div class="border-t border-gray-200 pt-6">
+                    <div class="mb-4">
+                        <div class="flex items-center text-gray-600 mb-2">
+                            <i data-feather="truck" class="w-5 h-5 mr-2"></i>
+                            <span>Free shipping on orders over $50</span>
+                        </div>
+                        <div class="flex items-center text-gray-600 mb-2">
+                            <i data-feather="refresh-cw" class="w-5 h-5 mr-2"></i>
+                            <span>Free returns within 30 days</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i data-feather="shield" class="w-5 h-5 mr-2"></i>
+                            <span>Secure payment</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs: Reviews and Details -->
+        <div class="mt-12">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                    <a href="#reviews" class="whitespace-nowrap py-4 px-1 border-b-2 border-blue-500 font-medium text-blue-600 text-sm" id="reviews-tab">
+                        Reviews ({{ product.reviews.count }})
+                    </a>
+                    <a href="#details" class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm" id="details-tab">
+                        Additional Details
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Reviews Tab Content -->
+            <div id="reviews-content" class="py-6">
+                <!-- Review Form -->
+                {% if user.is_authenticated %}
+                    <div class="max-w-2xl mb-8 bg-white rounded-lg shadow-sm p-6">
+                        <h3 class="text-lg font-bold mb-4">Write a Review</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="block font-medium mb-2">Rating</label>
+                                <div class="flex space-x-2">
+                                    <div class="rating flex">
+                                        {% for i in "12345" %}
+                                            <input type="radio" name="rating" value="{{ forloop.counter }}" class="sr-only" id="rating-{{ forloop.counter }}" required {% if forloop.counter == 5 %}checked{% endif %}>
+                                            <label for="rating-{{ forloop.counter }}" class="cursor-pointer text-gray-300 hover:text-amber-400 px-1">
+                                                <i data-feather="star" class="w-6 h-6 fill-current"></i>
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="review" class="block font-medium mb-2">Your Review</label>
+                                <textarea id="review" name="review" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                            </div>
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                                Submit Review
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+                
+                <!-- Reviews List -->
+                <h3 class="text-xl font-bold mb-6">Customer Reviews</h3>
+                
+                {% if product.reviews.all %}
+                    <div class="space-y-6">
+                        {% for review in product.reviews.all %}
+                            <div class="bg-white rounded-lg shadow-sm p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <div class="flex items-center mb-1">
+                                            <div class="text-amber-400 flex">
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= review.rating %}
+                                                        <i data-feather="star" class="w-5 h-5 fill-current"></i>
+                                                    {% else %}
+                                                        <i data-feather="star" class="w-5 h-5"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <h4 class="font-semibold">{{ review.user.get_full_name|default:review.user.username }}</h4>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        {{ review.created_at|date:"F j, Y" }}
+                                    </div>
+                                </div>
+                                <p class="text-gray-700">{{ review.review }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+                        <i data-feather="message-square" class="w-12 h-12 mx-auto text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-medium text-gray-900 mb-2">No reviews yet</h3>
+                        <p class="text-gray-600 mb-6">Be the first to review this product</p>
+                        {% if user.is_authenticated %}
+                            <a href="#reviews" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                                Write a Review
+                            </a>
+                        {% else %}
+                            <a href="{% url 'users:login' %}?next={{ request.path }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                                Login to Write a Review
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Details Tab Content (hidden by default) -->
+            <div id="details-content" class="py-6 hidden">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Product Details</h3>
+                            <table class="w-full">
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="py-2 font-medium text-gray-600">Category</td>
+                                        <td class="py-2">{{ product.category.name }}</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2 font-medium text-gray-600">Gender</td>
+                                        <td class="py-2">{{ product.get_gender_display }}</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-2 font-medium text-gray-600">SKU</td>
+                                        <td class="py-2">{{ product.id|truncatechars:8 }}</td>
+                                    </tr>
+                                    {% if product.variants.all %}
+                                        <tr class="border-b">
+                                            <td class="py-2 font-medium text-gray-600">Available Sizes</td>
+                                            <td class="py-2">
+                                                {% for variant in product.variants.all|dictsort:"size"|unique:"size" %}
+                                                    <span class="inline-block mr-2">{{ variant.size }}</span>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="py-2 font-medium text-gray-600">Available Colors</td>
+                                            <td class="py-2">
+                                                {% for variant in product.variants.all|dictsort:"color"|unique:"color" %}
+                                                    <span class="inline-block mr-2">{{ variant.color }}</span>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-4">Care Instructions</h3>
+                            <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                                <li>Machine wash cold</li>
+                                <li>Do not bleach</li>
+                                <li>Tumble dry low</li>
+                                <li>Iron on low heat</li>
+                                <li>Do not dry clean</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Related Products -->
+        {% if related_products %}
+            <div class="mt-16">
+                <h2 class="text-2xl font-bold mb-6">You May Also Like</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {% for related_product in related_products %}
+                        <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <a href="{% url 'products:detail' related_product.id %}">
+                                <div class="h-64 bg-gray-200 relative">
+                                    {% if related_product.image %}
+                                        <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="flex items-center justify-center h-full text-gray-500">
+                                            <i data-feather="image" class="w-12 h-12"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if related_product.discount_price %}
+                                        <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                            SALE
+                                        </div>
+                                    {% elif related_product.is_new %}
+                                        <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                            NEW
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <div class="p-4">
+                                <h3 class="font-medium text-gray-900 mb-1">
+                                    <a href="{% url 'products:detail' related_product.id %}">{{ related_product.name }}</a>
+                                </h3>
+                                <p class="text-gray-500 text-sm mb-2">{{ related_product.category.name }}</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        {% if related_product.discount_price %}
+                                            <span class="text-red-600 font-bold">₹{{ related_product.discount_price }}</span>
+                                            <span class="text-gray-400 line-through ml-2">₹{{ related_product.price }}</span>
+                                        {% else %}
+                                            <span class="font-bold">₹{{ related_product.price }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const reviewsTab = document.getElementById('reviews-tab');
+            const detailsTab = document.getElementById('details-tab');
+            const reviewsContent = document.getElementById('reviews-content');
+            const detailsContent = document.getElementById('details-content');
+            
+            reviewsTab.addEventListener('click', function(e) {
+                e.preventDefault();
+                reviewsTab.classList.add('border-blue-500', 'text-blue-600');
+                reviewsTab.classList.remove('border-transparent', 'text-gray-500');
+                detailsTab.classList.remove('border-blue-500', 'text-blue-600');
+                detailsTab.classList.add('border-transparent', 'text-gray-500');
+                
+                reviewsContent.classList.remove('hidden');
+                detailsContent.classList.add('hidden');
+            });
+            
+            detailsTab.addEventListener('click', function(e) {
+                e.preventDefault();
+                detailsTab.classList.add('border-blue-500', 'text-blue-600');
+                detailsTab.classList.remove('border-transparent', 'text-gray-500');
+                reviewsTab.classList.remove('border-blue-500', 'text-blue-600');
+                reviewsTab.classList.add('border-transparent', 'text-gray-500');
+                
+                detailsContent.classList.remove('hidden');
+                reviewsContent.classList.add('hidden');
+            });
+            
+            // Rating stars hover effect
+            const ratingInputs = document.querySelectorAll('.rating input');
+            const ratingLabels = document.querySelectorAll('.rating label');
+            
+            ratingLabels.forEach((label, index) => {
+                label.addEventListener('mouseover', function() {
+                    for (let i = 0; i <= index; i++) {
+                        ratingLabels[i].classList.add('text-amber-400');
+                        ratingLabels[i].classList.remove('text-gray-300');
+                    }
+                    for (let i = index + 1; i < ratingLabels.length; i++) {
+                        ratingLabels[i].classList.remove('text-amber-400');
+                        ratingLabels[i].classList.add('text-gray-300');
+                    }
+                });
+            });
+            
+            const ratingContainer = document.querySelector('.rating');
+            if (ratingContainer) {
+                ratingContainer.addEventListener('mouseout', function() {
+                    ratingLabels.forEach((label, index) => {
+                        const input = ratingInputs[index];
+                        if (input.checked) {
+                            for (let i = 0; i <= index; i++) {
+                                ratingLabels[i].classList.add('text-amber-400');
+                                ratingLabels[i].classList.remove('text-gray-300');
+                            }
+                            for (let i = index + 1; i < ratingLabels.length; i++) {
+                                ratingLabels[i].classList.remove('text-amber-400');
+                                ratingLabels[i].classList.add('text-gray-300');
+                            }
+                        }
+                    });
+                });
+            }
+            
+            ratingInputs.forEach((input, index) => {
+                input.addEventListener('change', function() {
+                    for (let i = 0; i <= index; i++) {
+                        ratingLabels[i].classList.add('text-amber-400');
+                        ratingLabels[i].classList.remove('text-gray-300');
+                    }
+                    for (let i = index + 1; i < ratingLabels.length; i++) {
+                        ratingLabels[i].classList.remove('text-amber-400');
+                        ratingLabels[i].classList.add('text-gray-300');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

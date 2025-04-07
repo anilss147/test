@@ -1,0 +1,241 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Shop All Products - My Cutipie{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">All Products</h1>
+        
+        <div class="flex flex-col md:flex-row">
+            <!-- Filters -->
+            <div class="w-full md:w-1/4 mb-6 md:mb-0 md:pr-6">
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <h2 class="text-lg font-bold mb-4">Filters</h2>
+                    
+                    <form action="{% url 'products:list' %}" method="get" id="filter-form">
+                        <!-- Keep existing query parameters -->
+                        {% if search_query %}
+                            <input type="hidden" name="q" value="{{ search_query }}">
+                        {% endif %}
+                        
+                        <!-- Categories -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold mb-2">Categories</h3>
+                            <div class="space-y-2">
+                                {% for category in categories %}
+                                    <div class="flex items-center">
+                                        <input type="radio" id="category_{{ category.id }}" name="category" value="{{ category.id }}" 
+                                               {% if selected_category == category.id|stringformat:"s" %}checked{% endif %}
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                        <label for="category_{{ category.id }}" class="ml-2 text-gray-700">
+                                            {{ category.name }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Gender -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold mb-2">Gender</h3>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="radio" id="gender_men" name="gender" value="men" 
+                                           {% if selected_gender == 'men' %}checked{% endif %}
+                                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="gender_men" class="ml-2 text-gray-700">Men</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="gender_women" name="gender" value="women" 
+                                           {% if selected_gender == 'women' %}checked{% endif %}
+                                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="gender_women" class="ml-2 text-gray-700">Women</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="gender_kids" name="gender" value="kids" 
+                                           {% if selected_gender == 'kids' %}checked{% endif %}
+                                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="gender_kids" class="ml-2 text-gray-700">Kids</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="gender_unisex" name="gender" value="unisex" 
+                                           {% if selected_gender == 'unisex' %}checked{% endif %}
+                                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="gender_unisex" class="ml-2 text-gray-700">Unisex</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price Range -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold mb-2">Price Range</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="min_price" class="text-xs text-gray-600">Min</label>
+                                    <input type="number" id="min_price" name="min_price" value="{{ selected_min_price }}" 
+                                           min="0" placeholder="Min" step="1"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                </div>
+                                <div>
+                                    <label for="max_price" class="text-xs text-gray-600">Max</label>
+                                    <input type="number" id="max_price" name="max_price" value="{{ selected_max_price }}" 
+                                           min="0" placeholder="Max" step="1"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sale Items -->
+                        <div class="mb-6">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="on_sale" name="on_sale" value="true" 
+                                       {% if request.GET.on_sale %}checked{% endif %}
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="on_sale" class="ml-2 text-gray-700">On Sale</label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-200">
+                                Apply Filters
+                            </button>
+                            <a href="{% url 'products:list' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium py-2 px-4 rounded-lg transition duration-200">
+                                Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Product Listing -->
+            <div class="w-full md:w-3/4">
+                <!-- Sort & Count Section -->
+                <div class="flex justify-between items-center mb-6">
+                    <p class="text-gray-600">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} products</p>
+                    
+                    <div class="flex items-center">
+                        <label for="sort" class="mr-2 text-gray-600">Sort by:</label>
+                        <select id="sort" name="sort" class="border border-gray-300 rounded-md p-2 text-sm" onchange="updateSort(this.value)">
+                            <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest</option>
+                            <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="popular" {% if selected_sort == 'popular' %}selected{% endif %}>Most Popular</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Products Grid -->
+                {% if page_obj %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for product in page_obj %}
+                            <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-200">
+                                <a href="{% url 'products:detail' product.id %}">
+                                    <div class="h-64 bg-gray-200 relative">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                                        {% else %}
+                                            <div class="flex items-center justify-center h-full text-gray-500">
+                                                <i data-feather="image" class="w-12 h-12"></i>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <!-- Display discount or new label on the left -->
+                                        {% if product.discount_price %}
+                                            <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                                SALE
+                                            </div>
+                                        {% elif product.is_new %}
+                                            <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                                NEW
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <!-- Display custom product labels on the right -->
+                                        {% include "products/includes/product_card_labels.html" with product=product %}
+                                    </div>
+                                </a>
+                                <div class="p-4">
+                                    <h3 class="font-medium text-gray-900 mb-1">
+                                        <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
+                                    </h3>
+                                    <p class="text-gray-500 text-sm mb-2">{{ product.category.name }}</p>
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            {% if product.discount_price %}
+                                                <span class="text-red-600 font-bold">₹{{ product.discount_price }}</span>
+                                                <span class="text-gray-400 line-through ml-2">₹{{ product.price }}</span>
+                                            {% else %}
+                                                <span class="font-bold">₹{{ product.price }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <div class="text-amber-400">
+                                                <i data-feather="star" class="w-4 h-4 fill-current"></i>
+                                            </div>
+                                            <span class="text-sm text-gray-600">{{ product.rating|default:"0.0" }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if page_obj.paginator.num_pages > 1 %}
+                        <div class="flex justify-center mt-8">
+                            <div class="flex space-x-1">
+                                {% if page_obj.has_previous %}
+                                    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                       class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
+                                        Previous
+                                    </a>
+                                {% endif %}
+                                
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <span class="px-4 py-2 text-white bg-blue-600 rounded-md">{{ num }}</span>
+                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                        <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                           class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
+                                            {{ num }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                       class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
+                                        Next
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                {% else %}
+                    <div class="text-center py-12">
+                        <i data-feather="shopping-bag" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-medium text-gray-900 mb-2">No products found</h3>
+                        <p class="text-gray-600 mb-6">Try adjusting your search or filter criteria.</p>
+                        <a href="{% url 'products:list' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                            View All Products
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function updateSort(value) {
+            // Get current URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Update sort parameter
+            urlParams.set('sort', value);
+            
+            // Redirect to updated URL
+            window.location.search = urlParams.toString();
+        }
+    </script>
+{% endblock %}

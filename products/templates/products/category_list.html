@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ category_name }} - StyleShop{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">{{ category_name }}</h1>
+        
+        {% if products %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {% for product in products %}
+                    <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                        <a href="{% url 'products:detail' product.id %}">
+                            <div class="h-64 bg-gray-200 relative">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="flex items-center justify-center h-full text-gray-500">
+                                        <i data-feather="image" class="w-12 h-12"></i>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Display discount or new label on the left -->
+                                {% if product.discount_price %}
+                                    <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                        SALE
+                                    </div>
+                                {% elif product.is_new %}
+                                    <div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                        NEW
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Display custom product labels on the right -->
+                                {% include "products/includes/product_card_labels.html" with product=product %}
+                            </div>
+                        </a>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-1">
+                                <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
+                            </h3>
+                            <p class="text-gray-500 text-sm mb-2">{{ product.category.name }}</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    {% if product.discount_price %}
+                                        <span class="text-red-600 font-bold">₹{{ product.discount_price }}</span>
+                                        <span class="text-gray-400 line-through ml-2">₹{{ product.price }}</span>
+                                    {% else %}
+                                        <span class="font-bold">₹{{ product.price }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <div class="text-amber-400">
+                                        <i data-feather="star" class="w-4 h-4 fill-current"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-600">{{ product.rating|default:"0.0" }}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Actions -->
+                            <div class="mt-4 flex space-x-2">
+                                <form action="{% url 'cart:add' %}" method="post" class="flex-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition duration-200 text-sm">
+                                        Add to Cart
+                                    </button>
+                                </form>
+                                
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'wishlist:add' product.id %}" class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-100 font-medium py-2 px-3 rounded-lg transition duration-200">
+                                        <i data-feather="heart" class="w-5 h-5"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+                <i data-feather="shopping-bag" class="w-12 h-12 mx-auto text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-medium text-gray-900 mb-2">No products found</h3>
+                <p class="text-gray-600 mb-6">There are no products in this category at the moment.</p>
+                <a href="{% url 'products:list' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                    Browse All Products
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
