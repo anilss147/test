@@ -1,0 +1,40 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore virtual environment
+venv/
+.env
+.venv
+env/
+
+# Ignore git directory
+.git/
+.gitignore
+
+# Ignore Docker files (they're copied separately)
+Dockerfile
+.dockerignore
+
+# Ignore database files
+*.sqlite3
+*.db
+
+# Ignore logs
+*.log
+
+# Ignore OS specific files
+.DS_Store
+
+# Ignore test and documentation
+/tests/
+/docs/
+/htmlcov/
+.coverage
+.pytest_cache/
+
+# Ignore local development settings
+.env.local
+.env.development
+local_settings.py

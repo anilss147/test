@@ -1,0 +1,81 @@
+/* Custom CSS for My Cutipie Kids Factory Outlet */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@300;400;600;700;800&display=swap');
+
+/* Base Styles */
+:root {
+    --primary-color: #EF476F;
+    --primary-hover: #e92d5a;
+    --secondary-color: #118AB2;
+    --accent-color: #FFD166;
+    --success-color: #06D6A0;
+    --background-color: #F7F9FC;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    @apply bg-gray-50;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Baloo 2', cursive;
+}
+
+/* Animation Keyframes */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes wiggle {
+    0%, 100% {
+        transform: rotate(-3deg);
+    }
+    50% {
+        transform: rotate(3deg);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0);
+    }
+    50% {
+        transform: translateY(-15px) rotate(5deg);
+    }
+}
+
+/* Animation Classes */
+.animate-bounce-slow {
+    animation: bounce 3s ease-in-out infinite;
+}
+
+.animate-wiggle {
+    animation: wiggle 2s ease-in-out infinite;
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Hover Effects */
+.hover-pop {
+    transition: transform 0.3s ease;
+}
+
+.hover-pop:hover {
+    transform: scale(1.05);
+}
+
+.hover-bounce:hover {
+    animation: bounce 1s ease-in-out;
+}
+
+.hover-wiggle:hover {
+    animation: wiggle 1s ease-in-out;
+}

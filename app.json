@@ -1,0 +1,27 @@
+{
+  "name": "My Cutipie Kids Factory Outlet",
+  "description": "A Django-powered e-commerce platform specializing in kids clothing retail",
+  "repository": "https://github.com/yourusername/my-cutipie",
+  "keywords": ["python", "django", "e-commerce", "kids", "clothing"],
+  "env": {
+    "SECRET_KEY": {
+      "description": "A secret key for Django app",
+      "generator": "secret"
+    },
+    "DJANGO_SETTINGS_MODULE": {
+      "description": "Django settings module to use",
+      "value": "clothing_store.settings_prod"
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "scripts": {
+    "postdeploy": "python manage.py migrate"
+  }
+}

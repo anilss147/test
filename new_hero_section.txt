@@ -1,0 +1,68 @@
+<!-- Hero Section - Kid-Friendly -->
+<section class="relative overflow-hidden bg-gradient-to-r from-purple-100 via-pink-50 to-yellow-100 py-12 md:py-20">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Left side content -->
+            <div class="text-left">
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4 relative">
+                    <span class="relative inline-block">
+                        Colorful Styles
+                        <div class="absolute bottom-0 left-0 w-full h-3 bg-yellow-300 transform -rotate-1 -z-10"></div>
+                    </span>
+                    <br>
+                    <span class="text-pink-600">for Playful Kids!</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-gray-700 mb-8">
+                    Discover our new collection of comfortable, 
+                    <span class="text-pink-600 font-semibold">high-quality</span> 
+                    kids clothing at 
+                    <span class="text-pink-600 font-semibold">factory outlet prices!</span>
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <a href="{% url 'products:category_list' 'kids' %}" class="btn-primary flex items-center">
+                        Shop Kids Collection
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <a href="{% url 'products:list' %}" class="btn-secondary flex items-center">
+                        Browse All
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Right side - decorative elements -->
+            <div class="relative h-80 md:h-96">
+                <!-- Main image -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-64 h-64 md:w-80 md:h-80 bg-white p-4 rounded-xl shadow-lg transform rotate-3 transition-transform hover:rotate-6 duration-300">
+                        <img src="/static/img/kids-collection.jpg" alt="Kids Collection" class="w-full h-full object-cover rounded-lg" 
+                             onerror="this.onerror=null; this.src='/media/products/placeholder.svg';">
+                    </div>
+                </div>
+                
+                <!-- Decorative elements -->
+                <div class="absolute -top-6 -right-6 w-24 h-24 bg-yellow-300 rounded-full opacity-70"></div>
+                <div class="absolute bottom-10 -left-8 w-16 h-16 bg-pink-400 rounded-full opacity-60"></div>
+                <div class="absolute top-20 right-10 w-12 h-12 bg-purple-400 rounded-full opacity-60"></div>
+                
+                <!-- Floating stars -->
+                <svg class="absolute top-8 left-10 w-10 h-10 text-yellow-500 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                </svg>
+                <svg class="absolute bottom-16 right-12 w-8 h-8 text-pink-500 animate-pulse" style="animation-delay: 0.5s;" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Decorative background patterns -->
+    <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 rounded-full bg-yellow-200 opacity-20"></div>
+    <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-60 h-60 rounded-full bg-pink-200 opacity-20"></div>
+</section>

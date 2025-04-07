@@ -1,0 +1,38 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Django E-commerce Server"
+
+[[workflows.workflow]]
+name = "Django E-commerce Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py collectstatic --noinput --settings=clothing_store.settings_replit && python manage.py migrate --settings=clothing_store.settings_replit && python manage.py runserver 0.0.0.0:5000 --settings=clothing_store.settings_replit"
+waitForPort = 5000
+
+[deployment]
+run = ["sh", "-c", "python manage.py collectstatic --noinput --settings=clothing_store.settings_replit && python manage.py migrate --settings=clothing_store.settings_replit && python manage.py runserver 0.0.0.0:5000 --settings=clothing_store.settings_replit"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80

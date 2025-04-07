@@ -1,0 +1,12 @@
+/* Custom Button Styles - Kids Theme */
+.btn-primary {
+    @apply bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-2.5 px-5 rounded-full transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1;
+}
+
+.btn-secondary {
+    @apply bg-gradient-to-r from-blue-400 to-teal-400 hover:from-blue-500 hover:to-teal-500 text-white font-bold py-2.5 px-5 rounded-full transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1;
+}
+
+.btn-danger {
+    @apply bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-2.5 px-5 rounded-full transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1;
+}

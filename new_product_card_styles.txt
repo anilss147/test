@@ -1,0 +1,51 @@
+/* Product Cards - Kids Style */
+.product-card {
+    @apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-pink-200;
+    transform: perspective(1px) translateZ(0);
+    transition-property: transform;
+}
+
+.product-card:hover {
+    transform: scale(1.03);
+}
+
+.product-card-img {
+    @apply h-64 bg-gray-100 relative overflow-hidden;
+}
+
+.product-card-body {
+    @apply p-5 rounded-b-xl;
+}
+
+.product-title {
+    @apply font-bold text-gray-900 text-lg mb-1;
+}
+
+.product-category {
+    @apply text-pink-600 text-sm mb-2 font-medium;
+}
+
+.product-price {
+    @apply font-extrabold text-lg;
+}
+
+.product-discount-price {
+    @apply text-pink-600 font-extrabold text-lg;
+}
+
+.product-original-price {
+    @apply text-gray-400 line-through ml-2;
+}
+
+/* Badge & Labels - Kids Style */
+.badge {
+    @apply absolute top-3 left-3 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-10;
+}
+
+.badge-sale {
+    @apply bg-gradient-to-r from-red-500 to-pink-500;
+}
+
+.badge-new {
+    @apply bg-gradient-to-r from-blue-500 to-purple-500;
+}

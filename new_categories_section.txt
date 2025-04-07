@@ -1,0 +1,58 @@
+/* Categories Section - Kids Style */
+.category-card {
+    @apply relative rounded-2xl overflow-hidden shadow-lg transition-all duration-300;
+    transform: perspective(1px) translateZ(0);
+}
+
+.category-card:hover {
+    transform: scale(1.02);
+    @apply shadow-xl;
+}
+
+.category-card-kids {
+    @apply bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100;
+}
+
+.category-card-women {
+    @apply bg-gradient-to-r from-pink-100 to-red-100;
+}
+
+.category-card-men {
+    @apply bg-gradient-to-r from-blue-100 to-indigo-100;
+}
+
+.category-content {
+    @apply px-6 py-8 bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm rounded-xl shadow-lg mx-auto text-center max-w-md;
+    transition: transform 0.3s ease-in-out;
+}
+
+.category-card:hover .category-content {
+    transform: translateY(-5px);
+}
+
+.category-title {
+    @apply text-3xl font-bold text-pink-600 mb-3;
+}
+
+.category-description {
+    @apply text-gray-700 mb-4;
+}
+
+.category-button {
+    @apply inline-block bg-pink-600 text-white px-4 py-2 rounded-full font-medium transition-colors duration-300;
+}
+
+.category-button:hover {
+    @apply bg-pink-700;
+}
+
+.category-decoration {
+    @apply absolute;
+    opacity: 0.2;
+    border-radius: 50%;
+    transition: transform 1s ease-in-out;
+}
+
+.category-card:hover .category-decoration {
+    transform: scale(1.2) rotate(10deg);
+}

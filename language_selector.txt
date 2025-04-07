@@ -1,0 +1,24 @@
+<body class="min-h-screen flex flex-col">
+    <!-- Language Selector -->
+    <div class="bg-gray-100 py-1">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-end items-center text-sm">
+                <div class="flex space-x-2">
+                    <a href="#" class="text-gray-600 hover:text-gray-900">English</a>
+                    <span class="text-gray-400">|</span>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">हिन्दी</a>
+                    <span class="text-gray-400">|</span>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">ಕನ್ನಡ</a>
+                    <span class="text-gray-400">|</span>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">தமிழ்</a>
+                    <span class="text-gray-400">|</span>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">తెలుగు</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-2">
+            <div class="flex justify-between items-center">
