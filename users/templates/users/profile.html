@@ -1,0 +1,280 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My Profile - StyleShop{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-12">
+        <h1 class="text-3xl font-bold mb-8">My Account</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Sidebar -->
+            <div class="md:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <div class="text-center mb-6">
+                        <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <i data-feather="user" class="w-12 h-12 text-gray-500"></i>
+                        </div>
+                        <h2 class="text-xl font-bold">{{ user.get_full_name }}</h2>
+                        <p class="text-gray-600">{{ user.email }}</p>
+                        {% if user.profile.phone_number %}
+                            <p class="text-gray-600 mt-1">
+                                <i data-feather="phone" class="w-4 h-4 inline mr-1"></i>
+                                {{ user.profile.get_full_phone_number }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    
+                    <nav>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#profile" class="block py-2 px-4 rounded hover:bg-gray-100 text-blue-600 font-medium">
+                                    <i data-feather="user" class="w-5 h-5 mr-2 inline"></i>
+                                    Profile Information
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#orders" class="block py-2 px-4 rounded hover:bg-gray-100">
+                                    <i data-feather="shopping-bag" class="w-5 h-5 mr-2 inline"></i>
+                                    Order History
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'wishlist:view' %}" class="block py-2 px-4 rounded hover:bg-gray-100">
+                                    <i data-feather="heart" class="w-5 h-5 mr-2 inline"></i>
+                                    Wishlist
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#password" class="block py-2 px-4 rounded hover:bg-gray-100">
+                                    <i data-feather="lock" class="w-5 h-5 mr-2 inline"></i>
+                                    Change Password
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'users:logout' %}" class="block py-2 px-4 rounded hover:bg-gray-100 text-red-600">
+                                    <i data-feather="log-out" class="w-5 h-5 mr-2 inline"></i>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-bold mb-4">Loyalty Points</h3>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold mb-2 text-blue-600">{{ user.profile.loyalty_points }}</div>
+                        <p class="text-gray-600 mb-4">Available Points</p>
+                        <p class="text-sm text-gray-600">
+                            Earn points with every purchase and redeem them for discounts on future orders.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="md:col-span-2">
+                <!-- Profile Information -->
+                <div id="profile" class="bg-white rounded-lg shadow-sm p-6 mb-8">
+                    <h2 class="text-xl font-bold mb-6">Profile Information</h2>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="update_profile" value="1">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="{{ user_form.first_name.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    First Name
+                                </label>
+                                {{ user_form.first_name }}
+                                {% if user_form.first_name.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ user_form.first_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div>
+                                <label for="{{ user_form.last_name.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    Last Name
+                                </label>
+                                {{ user_form.last_name }}
+                                {% if user_form.last_name.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ user_form.last_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ user_form.email.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                Email
+                            </label>
+                            {{ user_form.email }}
+                            {% if user_form.email.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ user_form.email.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="md:col-span-1">
+                                    {{ profile_form.country_code }}
+                                    {% if profile_form.country_code.errors %}
+                                        <div class="text-red-600 text-sm mt-1">
+                                            {{ profile_form.country_code.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="md:col-span-2">
+                                    {{ profile_form.phone_number }}
+                                    {% if profile_form.phone_number.errors %}
+                                        <div class="text-red-600 text-sm mt-1">
+                                            {{ profile_form.phone_number.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-medium mb-2">Preferred Login Method</label>
+                            <div class="flex space-x-4">
+                                {% for radio in profile_form.preferred_login_method %}
+                                    <label class="inline-flex items-center">
+                                        {{ radio.tag }}
+                                        <span class="ml-2">{{ radio.choice_label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            {% if profile_form.preferred_login_method.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ profile_form.preferred_login_method.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                                Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Order History -->
+                <div id="orders" class="bg-white rounded-lg shadow-sm p-6 mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold">Recent Orders</h2>
+                        <a href="{% url 'orders:history' %}" class="text-blue-600 hover:underline text-sm font-medium">
+                            View All Orders
+                        </a>
+                    </div>
+                    
+                    {% if recent_orders %}
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="py-3 px-4 text-sm font-semibold">Order</th>
+                                        <th class="py-3 px-4 text-sm font-semibold">Date</th>
+                                        <th class="py-3 px-4 text-sm font-semibold">Status</th>
+                                        <th class="py-3 px-4 text-sm font-semibold">Total</th>
+                                        <th class="py-3 px-4 text-sm font-semibold">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in recent_orders %}
+                                        <tr class="border-b border-gray-200">
+                                            <td class="py-3 px-4">#{{ order.id }}</td>
+                                            <td class="py-3 px-4">{{ order.created_at|date:"M d, Y" }}</td>
+                                            <td class="py-3 px-4">
+                                                <span class="{% if order.status == 'completed' %}text-green-600 bg-green-100{% elif order.status == 'processing' %}text-blue-600 bg-blue-100{% else %}text-gray-600 bg-gray-100{% endif %} py-1 px-2 rounded-full text-xs font-semibold">
+                                                    {{ order.get_status_display }}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-4">₹{{ order.total_price }}</td>
+                                            <td class="py-3 px-4">
+                                                <a href="{% url 'orders:detail' order.id %}" class="text-blue-600 hover:underline text-sm">
+                                                    View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8 text-gray-500">
+                            <i data-feather="shopping-bag" class="w-12 h-12 mx-auto mb-4"></i>
+                            <p>You haven't placed any orders yet.</p>
+                            <a href="{% url 'products:list' %}" class="mt-4 inline-block text-blue-600 hover:underline">
+                                Start Shopping
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Change Password -->
+                <div id="password" class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-xl font-bold mb-6">Change Password</h2>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="change_password" value="1">
+                        
+                        <div class="mb-4">
+                            <label for="{{ password_form.old_password.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                Current Password
+                            </label>
+                            <input type="password" name="old_password" id="{{ password_form.old_password.id_for_label }}" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            {% if password_form.old_password.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ password_form.old_password.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ password_form.new_password1.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                New Password
+                            </label>
+                            <input type="password" name="new_password1" id="{{ password_form.new_password1.id_for_label }}" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            {% if password_form.new_password1.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ password_form.new_password1.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="{{ password_form.new_password2.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                Confirm New Password
+                            </label>
+                            <input type="password" name="new_password2" id="{{ password_form.new_password2.id_for_label }}" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            {% if password_form.new_password2.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ password_form.new_password2.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                                Change Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

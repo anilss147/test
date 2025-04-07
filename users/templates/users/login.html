@@ -1,1 +1,62 @@
+{% extends 'core/base.html' %}
 
+{% block title %}Login - My Cutipie{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-sm p-8">
+            <h1 class="text-2xl font-bold mb-6 text-center">Login to Your Account</h1>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <div class="mb-4">
+                    <label for="{{ form.username.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                        Email or Phone Number
+                    </label>
+                    {{ form.username }}
+                    <p class="text-gray-500 text-xs mt-1">Enter your email address or phone number with country code (e.g., +1234567890)</p>
+                    {% if form.username.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex justify-between mb-2">
+                        <label for="{{ form.password.id_for_label }}" class="block text-gray-700 font-medium">
+                            Password
+                        </label>
+                        <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
+                    </div>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="text-red-600 text-sm mt-1">
+                            {{ form.password.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                    Login
+                </button>
+            </form>
+            
+            <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+                <p class="text-gray-600">
+                    Don't have an account?
+                    <a href="{% url 'users:register' %}" class="text-blue-600 hover:underline font-semibold">
+                        Register
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
