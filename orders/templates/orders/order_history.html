@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Order History - StyleShop{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Order History</h1>
+        
+        {% if orders %}
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Order ID</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Date</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Total</th>
+                            <th class="py-3 px-4 text-right text-sm font-semibold text-gray-700">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for order in orders %}
+                            <tr>
+                                <td class="py-3 px-4 text-gray-800">
+                                    <div class="font-medium">{{ order.id|truncatechars:8 }}</div>
+                                    <div class="text-xs text-gray-500">{{ order.get_items|length }} item{{ order.get_items|length|pluralize }}</div>
+                                </td>
+                                <td class="py-3 px-4 text-gray-800">
+                                    <div>{{ order.created_at|date:"M d, Y" }}</div>
+                                    <div class="text-xs text-gray-500">{{ order.created_at|time:"g:i A" }}</div>
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                        {% if order.status == 'completed' %}
+                                            bg-green-100 text-green-800
+                                        {% elif order.status == 'processing' %}
+                                            bg-blue-100 text-blue-800
+                                        {% elif order.status == 'shipped' %}
+                                            bg-purple-100 text-purple-800
+                                        {% elif order.status == 'cancelled' %}
+                                            bg-red-100 text-red-800
+                                        {% else %}
+                                            bg-gray-100 text-gray-800
+                                        {% endif %}
+                                    ">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 font-medium text-gray-800">₹{{ order.total_price }}</td>
+                                <td class="py-3 px-4 text-right">
+                                    <a href="{% url 'orders:detail' order.id %}" class="inline-flex items-center px-3 py-1 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition duration-200 text-sm">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+                <i data-feather="shopping-bag" class="w-12 h-12 mx-auto text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-medium text-gray-900 mb-2">No orders yet</h3>
+                <p class="text-gray-600 mb-6">You haven't placed any orders yet.</p>
+                <a href="{% url 'products:list' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                    Start Shopping
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

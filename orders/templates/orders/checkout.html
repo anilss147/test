@@ -1,1 +1,370 @@
+{% extends 'core/base.html' %}
 
+{% block title %}Checkout - StyleShop{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Checkout</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Checkout Form -->
+            <div class="lg:col-span-2">
+                <form method="post" class="bg-white rounded-lg shadow-sm p-6">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Contact Information -->
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-4">Contact Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="{{ form.first_name.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    First Name*
+                                </label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.first_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.last_name.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    Last Name*
+                                </label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.last_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <label for="{{ form.email.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    Email*
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.email.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.phone.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    Phone Number
+                                </label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.phone.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Address -->
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-4">Shipping Address</h2>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.address.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                Address*
+                            </label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.address.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.address2.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                Apartment, suite, etc. (optional)
+                            </label>
+                            {{ form.address2 }}
+                            {% if form.address2.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.address2.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="{{ form.city.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    City*
+                                </label>
+                                {{ form.city }}
+                                {% if form.city.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.city.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.state.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    State/Province*
+                                </label>
+                                {{ form.state }}
+                                {% if form.state.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.state.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.postal_code.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    Postal/ZIP Code*
+                                </label>
+                                {{ form.postal_code }}
+                                {% if form.postal_code.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {{ form.postal_code.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <label for="{{ form.country.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                Country*
+                            </label>
+                            {{ form.country }}
+                            {% if form.country.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.country.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Information -->
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-4">Payment Information</h2>
+                        
+                        <div class="mb-4">
+                            <div class="font-medium mb-2">Payment Method*</div>
+                            <div class="space-y-2">
+                                {% for radio in form.payment_method %}
+                                    <div class="flex items-center">
+                                        {{ radio.tag }}
+                                        <label for="{{ radio.id_for_label }}" class="ml-2 text-gray-700">
+                                            {{ radio.choice_label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if form.payment_method.errors %}
+                                <div class="text-red-600 text-sm mt-1">
+                                    {{ form.payment_method.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Credit Card Details (shown only when credit card is selected) -->
+                        <div id="credit-card-fields" class="p-4 border border-gray-200 rounded-lg mb-4">
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="{{ form.card_number.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                        Card Number
+                                    </label>
+                                    {{ form.card_number }}
+                                </div>
+                                <div>
+                                    <label for="{{ form.card_expiry.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                        Expiration Date
+                                    </label>
+                                    {{ form.card_expiry }}
+                                </div>
+                            </div>
+                            <div>
+                                <label for="{{ form.card_cvc.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                                    CVC/CVV
+                                </label>
+                                {{ form.card_cvc }}
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center mb-2">
+                            {{ form.save_payment_info }}
+                            <label for="{{ form.save_payment_info.id_for_label }}" class="ml-2 text-gray-700">
+                                Save my payment information for future purchases
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Options -->
+                    <div class="mb-6">
+                        <div class="flex items-center mb-2">
+                            {{ form.subscribe_newsletter }}
+                            <label for="{{ form.subscribe_newsletter.id_for_label }}" class="ml-2 text-gray-700">
+                                Subscribe to our newsletter for exclusive offers and updates
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200">
+                        Complete Order
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+                    
+                    <div class="space-y-4 mb-6">
+                        {% for item in cart %}
+                            <div class="flex items-start">
+                                <div class="h-16 w-16 flex-shrink-0 mr-4 bg-gray-200 rounded">
+                                    {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="h-full w-full object-cover">
+                                    {% else %}
+                                        <div class="flex items-center justify-center h-full text-gray-500">
+                                            <i data-feather="image" class="w-6 h-6"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow">
+                                    <h3 class="text-sm font-medium text-gray-900">
+                                        {{ item.product.name }}
+                                        <span class="text-gray-500 ml-1">x{{ item.quantity }}</span>
+                                    </h3>
+                                    {% if item.size or item.color %}
+                                        <p class="text-xs text-gray-600 mt-1">
+                                            {% if item.size %}Size: {{ item.size }}{% endif %}
+                                            {% if item.color %}{% if item.size %}, {% endif %}Color: {{ item.color }}{% endif %}
+                                        </p>
+                                    {% endif %}
+                                    <div class="mt-1 text-sm font-semibold">₹{{ item.total_price }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="space-y-3 border-t pt-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Subtotal</span>
+                            <span class="font-medium">₹{{ cart.get_subtotal_price }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Shipping</span>
+                            {% if cart.get_shipping_cost == 0 %}
+                                <span class="text-green-600">Free</span>
+                            {% else %}
+                                <span class="font-medium">₹{{ cart.get_shipping_cost }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if cart.get_discount > 0 %}
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Discount</span>
+                                <span class="text-red-600">-₹{{ cart.get_discount }}</span>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="border-t pt-3 my-3 flex justify-between font-bold">
+                            <span>Total</span>
+                            <span>₹{{ cart.get_final_price }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-100 rounded-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <i data-feather="shield" class="w-5 h-5 text-green-600 mr-2"></i>
+                        <h3 class="font-semibold">Secure Checkout</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Your payment information is processed securely. We do not store credit card details nor have access to your credit card information.
+                    </p>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-gray-500">We accept:</div>
+                        <div>Visa</div>
+                        <div>Mastercard</div>
+                        <div>American Express</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show/hide credit card fields based on payment method selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const creditCardFields = document.getElementById('credit-card-fields');
+            const paymentOptions = document.querySelectorAll('input[name="payment_method"]');
+            
+            function toggleCreditCardFields() {
+                const selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
+                if (selectedPayment === 'credit_card') {
+                    creditCardFields.style.display = 'block';
+                } else {
+                    creditCardFields.style.display = 'none';
+                }
+            }
+            
+            // Initialize on page load
+            toggleCreditCardFields();
+            
+            // Add event listeners to payment method options
+            paymentOptions.forEach(option => {
+                option.addEventListener('change', toggleCreditCardFields);
+            });
+            
+            // Format credit card number input
+            const cardNumberInput = document.getElementById('{{ form.card_number.id_for_label }}');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 16) {
+                        value = value.slice(0, 16);
+                    }
+                    
+                    // Add spaces every 4 digits
+                    let formattedValue = '';
+                    for (let i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) {
+                            formattedValue += ' ';
+                        }
+                        formattedValue += value[i];
+                    }
+                    
+                    e.target.value = formattedValue;
+                });
+            }
+            
+            // Format card expiration date (MM/YY)
+            const cardExpiryInput = document.getElementById('{{ form.card_expiry.id_for_label }}');
+            if (cardExpiryInput) {
+                cardExpiryInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 4) {
+                        value = value.slice(0, 4);
+                    }
+                    
+                    // Format as MM/YY
+                    if (value.length > 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2);
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
+{% endblock %}
