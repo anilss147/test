@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: django-ecommerce
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn clothing_store.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: DJANGO_SETTINGS_MODULE
+        value: clothing_store.settings_prod
+      - key: WEB_CONCURRENCY
+        value: 4
+
+databases:
+  - name: django-ecommerce-db
+    databaseName: djangodb
+    user: django
