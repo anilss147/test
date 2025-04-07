@@ -1,1 +1,15 @@
+{% comment %}
+Product Labels Template Partial
+Usage: {% include "products/includes/product_labels.html" with product=product %}
+{% endcomment %}
 
+{% if product.get_labels %}
+<div class="flex flex-wrap mb-2">
+    {% for label in product.get_labels %}
+    <span class="inline-block text-xs font-semibold rounded-md px-2 py-1 mr-2 mb-2"
+          style="background-color: {{ label.background_color }}; color: {{ label.color }};">
+        {{ label.display_name }}
+    </span>
+    {% endfor %}
+</div>
+{% endif %}

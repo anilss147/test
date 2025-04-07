@@ -1,0 +1,17 @@
+{% comment %}
+Product Card Labels Template Partial - Smaller version for product cards
+Usage: {% include "products/includes/product_card_labels.html" with product=product %}
+{% endcomment %}
+
+{% with labels=product.get_labels %}
+{% if labels %}
+    <div class="flex flex-wrap absolute top-2 right-2">
+        {% for label in labels %}
+        <span class="inline-block text-xs font-semibold rounded-md px-1.5 py-0.5 mr-1 mb-1"
+              style="background-color: {{ label.background_color }}; color: {{ label.color }};">
+            {{ label.display_name }}
+        </span>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
