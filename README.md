@@ -1,4 +1,4 @@
-# My Cutipie - Kids Factory Outlet
+# 
 
 A comprehensive e-commerce platform specializing in kids clothing retail, built with Django.
 
